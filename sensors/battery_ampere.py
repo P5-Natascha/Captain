@@ -30,7 +30,6 @@ def readampere(chan: AnalogIn) -> float:
     voltage = chan.voltage
 
     current = ((voltage - OFFSET) / SENSITIVITY) * CAL_FACTOR
-    print(current)
-    print("A")
+    print(f"{current:.2f}A")
     return current
 
