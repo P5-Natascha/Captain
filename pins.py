@@ -4,3 +4,7 @@ DIR1 = board.D18
 DIR2 = board.D23
 PWM1 = board.D13
 PVM2 = board.D19
+
+SPICLK = board.SCK
+SPIMOSI = board.MOSI
+SPIMISO = board.MISO
