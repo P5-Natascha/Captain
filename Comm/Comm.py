@@ -4,6 +4,8 @@ import random
 import time
 
 from Sensoren import ADC
+from Sensoren.ADC import ADC
+
 latest_udp_data = {"x": 0, "y": 0, "mode": 0}
 latest_tcp_msg = ""
 active_tcp_connection = None
@@ -47,12 +49,6 @@ def sendRealValues(batt, vel):
     sendTCP(active_tcp_connection, "BATT", batt)
     sendTCP(active_tcp_connection, "VEL", vel)
 
-def connHandler(adc,chan :int) -> None:
-    while True:
-        if(active_tcp_connection):
-            sendRealValues(adc.get_ampere(chan), 0)
-            time.sleep(1)
-
 def handle_incoming_udp(sock):
     global latest_udp_data
     try:
@@ -65,8 +61,19 @@ def handle_incoming_udp(sock):
         pass
     return None
 
+def udpHandler():
+    if active_tcp_connection:
+        sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        sock.bind(('0.0.0.0', UDP_PORT))
+        while True:
+            try:
+                data, addr = sock.recvfrom(1024)
+                if len(data) <= 5:
+                    x, y, mode = struct.unpack('<HHB', data[:5])
+                    latest_udp_data = x, y, mode
+            except: pass
 
-def tcp_server_step():
+def connHandler(adc):
     global active_tcp_connection, latest_tcp_msg
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -80,6 +87,7 @@ def tcp_server_step():
                 data = conn.recv(1024)
                 if not data: break
                 msg = data.decode('utf-8', errors='ignore').strip()
+                sendRealValues(adc.get_ampere(0), 0)
             except: break
         active_tcp_connection = None
         conn.close()
