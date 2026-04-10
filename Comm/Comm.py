@@ -7,6 +7,8 @@ from Sensoren import ADC
 latest_udp_data = {"x": 0, "y": 0, "mode": 0}
 latest_tcp_msg = ""
 active_tcp_connection = None
+TCP_PORT = 9006
+UDP_PORT = 9005
 
 def parseUDPData(data):
     if len(data) >= 5:
@@ -25,7 +27,7 @@ def sendTCP(conn, key, value):
     if conn:
         try:
             msg = f"{key}:{value}\n"
-            conn.sendall(msg.encode('utf-8'))
+            conn.sendall(msg.encode())
             return True
         except Exception as e:
             print(f"Sende-Fehler: {e}")
@@ -47,8 +49,9 @@ def sendRealValues(batt, vel):
 
 def connHandler(adc,chan :int) -> None:
     while True:
-        sendRealValues(adc.get_ampere(chan), 0)
-        time.sleep(1)
+        if(active_tcp_connection):
+            sendRealValues(adc.get_ampere(chan), 0)
+            time.sleep(1)
 
 def handle_incoming_udp(sock):
     global latest_udp_data
@@ -63,38 +66,21 @@ def handle_incoming_udp(sock):
     return None
 
 
-def tcp_server_step(sock):
+def tcp_server_step():
     global active_tcp_connection, latest_tcp_msg
-
-    if active_tcp_connection is None:
-        sock.settimeout(1.0)
-        try:
-            conn, addr = sock.accept()
-            active_tcp_connection = conn
-            print(f"ESP32 verbunden: {addr[0]}")
-        except socket.timeout:
-            return
-
-    try:
-        active_tcp_connection.settimeout(0.1)
-        data = active_tcp_connection.recv(1024)
-
-        if not data:
-            print("ESP32 hat die Verbindung getrennt.")
-            active_tcp_connection.close()
-            active_tcp_connection = None
-            return
-
-        msg = DecodeTCP(data)
-        if msg:
-            latest_tcp_msg = msg
-            if "mode" in msg.lower():
-                print(f"Spezial-Info vom ESP: {msg}")
-            sendSimulatedValues(active_tcp_connection)
-
-    except socket.timeout:
-        pass
-    except Exception as e:
-        print(f"TCP Fehler: {e}")
-        active_tcp_connection.close()
+    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    sock.bind(("0.0.0.0", TCP_PORT))
+    sock.listen(1)
+    while True:
+        conn, addr = sock.accept()
+        active_tcp_connection = conn
+        while True:
+            try:
+                data = conn.recv(1024)
+                if not data: break
+                msg = data.decode('utf-8', errors='ignore').strip()
+            except: break
         active_tcp_connection = None
+        conn.close()
+

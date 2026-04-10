@@ -12,7 +12,7 @@ def vorwaerts(t: int, speed: int) -> None:
     dir2 = digitalio.DigitalInOut(pins.DIR2)
     dir2.direction = digitalio.Direction.OUTPUT
 
-    pwm2 = pwmio.PVMOut(pins.PWM2, frequency=1000, duty_cycle=0)
+    pwm2 = pwmio.PWMOut(pins.PWM2, frequency=1000, duty_cycle=0)
 
     # true = vorwaerts
     dir2.value = True
@@ -29,7 +29,7 @@ def rueckwaerts(t: int, speed: int) -> None:
     dir2 = digitalio.DigitalInOut(pins.DIR2)
     dir2.direction = digitalio.Direction.OUTPUT
 
-    pwm2 = pwmio.PVMOut(pins.PWM2, frequency=1000, duty_cycle=0)
+    pwm2 = pwmio.PWMOut(pins.PWM2, frequency=1000, duty_cycle=0)
 
     # true = vorwaerts
     dir2.value = False
@@ -46,7 +46,7 @@ def links(t: int, speed: int) -> None:
     dir1 = digitalio.DigitalInOut(pins.DIR2)
     dir1.direction = digitalio.Direction.OUTPUT
 
-    pwm1 = pwmio.PVMOut(pins.PWM1, frequency=1000, duty_cycle=0)
+    pwm1 = pwmio.PWMOut(pins.PWM1, frequency=1000, duty_cycle=0)
 
     # true = vorwaerts
     dir1.value = False
@@ -62,7 +62,7 @@ def rechts(t: int, speed: int):
     dir1 = digitalio.DigitalInOut(pins.DIR2)
     dir1.direction = digitalio.Direction.OUTPUT
 
-    pwm1 = pwmio.PVMOut(pins.PWM1, frequency=1000, duty_cycle=0)
+    pwm1 = pwmio.PWMOut(pins.PWM1, frequency=1000, duty_cycle=0)
 
     # true = vorwaerts
     dir1.value = True
