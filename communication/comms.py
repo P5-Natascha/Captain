@@ -1,11 +1,8 @@
 import socket
 import struct
 import random
-import time
 
-from Comm.inputHandler import inputHandler
-from Sensoren import ADC
-from Sensoren.ADC import ADC
+from communication.inputHandler import inputHandler
 
 latest_tcp_msg = ""
 active_tcp_connection = None

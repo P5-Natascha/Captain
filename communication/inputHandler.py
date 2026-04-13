@@ -1,7 +1,5 @@
-import struct
-
-from Comm.Comm import active_tcp_connection
-from Motor.motors import vorwaerts
+from communication.comms import active_tcp_connection
+from comps.motors.motors import vorwaerts
 
 def inputHandler(y):
     if active_tcp_connection:
