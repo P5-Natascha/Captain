@@ -1,16 +1,14 @@
-import time
 import threading
 
-from Sensoren import ADC
-from Sensoren import Batterie_Prozent
-from Comm import inputHandler
-from Comm import Comm
+from comps.sensors import ADC, Batterie_Prozent
+from communication import comms
+
 
 def main():
     adc = ADC.ADC()
-    t1 = threading.Thread(target=Comm.connHandler, args=(adc,))
+    t1 = threading.Thread(target=comms.connHandler, args=(adc,))
     t1.start()
-    t2 = threading.Thread(target=Comm.udpHandler)
+    t2 = threading.Thread(target=comms.udpHandler)
     t2.start()
 
     print(adc.get_ampere(0))

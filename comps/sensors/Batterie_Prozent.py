@@ -1,8 +1,5 @@
 import time
 
-from Sensoren import ADC
-from Sensoren.ADC import ADC
-
 messungen = []
 KAP_AH = 9.0
 
