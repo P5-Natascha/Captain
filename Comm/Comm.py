@@ -3,10 +3,10 @@ import struct
 import random
 import time
 
+from Comm.inputHandler import inputHandler
 from Sensoren import ADC
 from Sensoren.ADC import ADC
 
-latest_udp_data = {"x": 0, "y": 0, "mode": 0}
 latest_tcp_msg = ""
 active_tcp_connection = None
 TCP_PORT = 9006
@@ -70,7 +70,10 @@ def udpHandler():
                 data, addr = sock.recvfrom(1024)
                 if len(data) <= 5:
                     x, y, mode = struct.unpack('<HHB', data[:5])
-                    latest_udp_data = x, y, mode
+                    latest_udp_data_x = x
+                    latest_udp_data_y = y
+                    latest_udp_data_mode = mode
+                    inputHandler(latest_udp_data_y)
             except: pass
 
 def connHandler(adc):
