@@ -63,13 +63,14 @@ def set_motor_speed(y_raw):
 
         return speed_pct
     elif y_raw < DEADZONE_INV:
-        speed_pct = ((y_raw - DEADZONE_INV) / MAX_ADC) * 100
+        speed_pct = ((DEADZONE_INV - y_raw) / DEADZONE_INV) * 100
         speed_pct = max(0.0, min(100.0, speed_pct))
 
         motor_dir.value = False
 
         duty = int((speed_pct / 100) * 65535)
         motor_pwm.duty_cycle = duty
+        return speed_pct
     else:
         # Joystick ist in Neutralstellung oder darunter -> Stopp
         motor_pwm.duty_cycle = 0
