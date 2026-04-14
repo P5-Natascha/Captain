@@ -9,6 +9,7 @@ import pins  # Deine Pin-Definitionen (DIR2, PWM2, etc.)
 UDP_PORT = 9005
 TCP_PORT = 9006
 DEADZONE = 1950  # Alles unter 1950 wird als Stillstand gewertet
+DEADZONE_INV = 1750
 MAX_ADC = 4095  # Maximalwert des ESP32 Joysticks (12-Bit)
 
 # --- HARDWARE INITIALISIERUNG ---
@@ -61,6 +62,14 @@ def set_motor_speed(y_raw):
         motor_pwm.duty_cycle = duty
 
         return speed_pct
+    elif y_raw < DEADZONE_INV:
+        speed_pct = ((y_raw - DEADZONE_INV) / MAX_ADC) * 100
+        speed_pct = max(0.0, min(100.0, speed_pct))
+
+        motor_dir.value = False
+
+        duty = int((speed_pct / 100) * 65535)
+        motor_pwm.duty_cycle = duty
     else:
         # Joystick ist in Neutralstellung oder darunter -> Stopp
         motor_pwm.duty_cycle = 0
