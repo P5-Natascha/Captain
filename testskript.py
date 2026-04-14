@@ -82,19 +82,19 @@ def set_servo_speed(x_raw):
     if x_raw > DEADZONE:
         speed_pct = ((x_raw - DEADZONE) / (MAX_ADC - DEADZONE)) * 100
         speed_pct = max(0.0, min(100.0, speed_pct))
-        motor_dir.value = False
+        servo_dir.value = False
         duty = int((speed_pct / 100) * 65535)
-        motor_pwm.duty_cycle = duty
+        servo_pwm.duty_cycle = duty
         return speed_pct
     elif x_raw < DEADZONE_INV:
         speed_pct = ((DEADZONE_INV - x_raw) / DEADZONE_INV) * 100
         speed_pct = max(0.0, min(100.0, speed_pct))
-        motor_dir.value = True
+        servo_dir.value = True
         duty = int((speed_pct / 100) * 65535)
-        motor_pwm.duty_cycle = duty
+        servo_pwm.duty_cycle = duty
         return speed_pct
     else:
-        motor_pwm.duty_cycle = 0
+        servo_pwm.duty_cycle = 0
         return 0.0
 
 
