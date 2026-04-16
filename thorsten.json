@@ -1,7 +1,0 @@
-{
-  "Volt_Faktor": 5.659637188,
-  "SENSITIVITY": 0.185,
-  "CAL_FACTOR": 0.74,
-  "OFFSET": 2.627,
-  "GPS_PORT": "/dev/ttyACM0"
-}
