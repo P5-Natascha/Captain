@@ -3,7 +3,7 @@ import struct
 import time
 import digitalio
 import pwmio
-import pins  # Deine Pin-Definitionen (DIR2, PWM2, etc.)
+import globals  # Deine Pin-Definitionen (DIR2, PWM2, etc.)
 
 # --- KONFIGURATION ---
 UDP_PORT = 9005
