@@ -9,11 +9,12 @@ import adafruit_mcp3xxx.mcp3204 as MCP
 from adafruit_mcp3xxx.analog_in import AnalogIn
 
 import pins
+from backend.file import data
 
-VOLTAGE_FACTOR: float = 5.659637188
-SENSITIVITY: float = 0.185  # 5A Version
-CAL_FACTOR: float = 0.74
-OFFSET: float = 2.627
+VOLTAGE_FACTOR: float = data["Volt_Faktor"]
+SENSITIVITY: float = data["SENSITIVITY"] # 5A Version
+CAL_FACTOR: float = data["CAL_Faktor"]
+OFFSET: float = data["OFFSET"]
 
 class ADC:
     def __init__(self) -> None:
