@@ -23,8 +23,8 @@ class ADC:
         for i in range(max_retries):
             try:
                 # spi init und cs pin festlegen
-                self.spi = busio.SPI(clock=pins.SPICLK, MISO=pins.SPIMISO, MOSI=pins.SPIMOSI)
-                self.cs = digitalio.DigitalInOut(pins.CSPin)
+                self.spi = busio.SPI(clock=globals.SPICLK, MISO=globals.SPIMISO, MOSI=globals.SPIMOSI)
+                self.cs = digitalio.DigitalInOut(globals.CSPin)
 
                 # MCP3204 initialisieren
                 mcp = MCP.MCP3204(self.spi, self.cs)

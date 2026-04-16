@@ -9,10 +9,10 @@ import globals
 
 #baby burn baby burn
 def deathrun(t: int, dir: bool, speed: int) -> None:
-    dir2 = digitalio.DigitalInOut(pins.DIR2)
+    dir2 = digitalio.DigitalInOut(globals.DIR2)
     dir2.direction = digitalio.Direction.OUTPUT
 
-    pvm2 = pwmio.PVMOUT(pins.PVM2, frequency=1000, duty_cycle=0)
+    pvm2 = pwmio.PVMOUT(globals.PVM2, frequency=1000, duty_cycle=0)
 
     # true = vorwaerts
     dir2.value = dir
