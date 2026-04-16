@@ -15,7 +15,7 @@ def status(adc,gps):
     logging.info("Status Meldung gestartet")
     logging.info(f"Akkustand: {adc.get_12voltage(1)}V {adc.get_ampere(0)}A")
     logging.info(f"Posi: {gps.get_lat()} {gps.get_lon()}")
-    logging.info(f"Geschwindigkeit: {gps.get_speed_ms}")
+    logging.info(f"Geschwindigkeit: {gps.get_speed_ms()}")
     logging.info("Status Meldung Ende")
     logging.info("====")
     return
