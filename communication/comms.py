@@ -114,5 +114,3 @@ def connHandler(adc):
                     except Exception:
                         active_tcp_connection = None
 
-
-

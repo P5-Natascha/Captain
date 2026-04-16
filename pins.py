@@ -8,9 +8,3 @@ PWM2 = board.D19
 SPICLK = board.SCK
 SPIMOSI = board.MOSI
 SPIMISO = board.MISO
-
-PCBErrorLED = board.D6
-
-SpoilerLEDgreen = board.D17
-SpoilerLEDyellow = board.D27
-SpoilerLEDred = board.D22

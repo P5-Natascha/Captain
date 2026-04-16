@@ -1,11 +1,10 @@
 #die person die die datei umbenennt wird sterben
 import logging
+
 import serial
 
-from backend.file import data
-
 class pyGPS:
-    def __init__(self, port=data["GPS_PORT"], baud=9600):
+    def __init__(self, port="/dev/ttyACM3", baud=9600):
         try:
             self.ser = serial.Serial(port=port, baudrate=baud)
         except serial.serialutil.SerialException:
