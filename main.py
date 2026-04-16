@@ -10,9 +10,16 @@ from backend import logs, status_meldung
 def main():
     logs.log_handler()
 
+    try:
+        file.read_json()
+    except Exception as e:
+        logging.error("Error während des lesens der Json")
+
+
     logging.info("Versucht alle Sensoren zu starten ...")
     adc = ADC.ADC()
     gps = pyGPS.pyGPS()
+    status_spoiler.setspoilergreenled()
 
     logging.info("Startet 5min Status Meldung ...")
     status_meldung_thread = threading.Thread(target=status_meldung.status_meldung_thread,args=(adc,gps,),daemon=True)
