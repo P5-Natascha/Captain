@@ -93,7 +93,7 @@ def connHandler(adc):
     udp_sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     udp_sock.bind(("0.0.0.0", UDP_PORT))
     udp_sock.settimeout(0.01)
-
+    t1.start()
     while True:
         try:
             while True:
@@ -105,8 +105,6 @@ def connHandler(adc):
                     except BlockingIOError:
                         pass
                 else:
-                    if not t1.is_alive():
-                        t1.start()
                     try:
                         data = active_tcp_connection.recv(1024)
                         if not data:
