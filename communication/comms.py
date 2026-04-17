@@ -68,10 +68,9 @@ def udpHandler():
         sock.bind(('0.0.0.0', UDP_PORT))
         logging.debug(getattr(t, "do_run", True))
         while getattr(t, "do_run", True):
-            data, addr = sock.recvfrom(1024)
             try:
                 data, addr = sock.recvfrom(1024)
-                if len(data) <= 5:
+                if len(data) >= 5:
                     x, y, mode = struct.unpack('<HHB', data[:5])
                     latest_udp_data_x = x
                     latest_udp_data_y = y
