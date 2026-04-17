@@ -90,37 +90,40 @@ def connHandler(adc):
 
     while True:
         try:
-            while True:
-                if active_tcp_connection is None:
-                    try:
-                        conn, addr = tcp_sock.accept()
-                        active_tcp_connection = conn
-                        active_tcp_connection.setblocking(False)
-                    except BlockingIOError:
-                        pass
-                else:
-                    try:
-                        data = active_tcp_connection.recv(1024)
-                        if not data:
-                            active_tcp_connection.close()
-                            active_tcp_connection = None
-                        else:
-                            msg = data.decode('utf-8', errors='ignore').strip()
-                            key, value = msg.split(':')
-                            if key == "mode":
-                                globals.current_mode = value
-                                logging.debug(f"Current Mode: {globals.current_mode}")
-                            else:
-                                logging.debug(f"Command nicht gefunden: {key}:{value}")
-                            logging.debug(msg)
+            try:
+                conn, addr = tcp_sock.accept()
+                active_tcp_connection = conn
+                active_tcp_connection.setblocking(False)
+                logging.info(f"Verbunden mit {addr}")
+            except BlockingIOError:
+                import time
+                time.sleep(0.1)
+                continue
+            while active_tcp_connection:
+                try:
+                    data = active_tcp_connection.recv(1024)
+                    if not data:
+                        break
+                    msg = data.decode('utf-8', errors='ignore').strip()
+                    key, value = msg.split(':')
+                    if key == "mode":
+                        globals.current_mode = value
+                        logging.debug(f"Current Mode: {globals.current_mode}")
+                    else:
+                        logging.debug(f"Command nicht gefunden: {key}:{value}")
+                    logging.debug(msg)
+                except BlockingIOError:
+                    time.sleep(0.01)
+                except Exception as e:
+                    logging.error(f"Fehler beim Empfangen: {e}")
+                    break
 
-                    except BlockingIOError:
-                        pass
-                    except Exception:
-                        active_tcp_connection = None
-        finally:
-            t1.do_run = False
+            logging.info("Client getrennt, räume auf...")
+            if active_tcp_connection:
+                active_tcp_connection.close()
+            active_tcp_connection = None
             stop()
-            keineAhnungDigga()
 
-
+        except Exception as e:
+            logging.error(f"Kritischer Fehler: {e}")
+            time.sleep(1)
