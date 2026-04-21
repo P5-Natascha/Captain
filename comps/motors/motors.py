@@ -3,7 +3,6 @@ import pwmio
 
 import globals
 
-
 class Motors:
     def __init__(self):
         self.dir2 = digitalio.DigitalInOut(globals.DIR2)
@@ -29,17 +28,9 @@ class Motors:
         self.pwm1.duty_cycle = 0
 
     def links(self, speed: float) -> None:
-        # true = vorwaerts
         self.dir1.value = False
         self.pwm1.duty_cycle = int(speed / 100 * 65535)  # 16-bit: 0–65535
 
     def rechts(self, speed: float):
-        # true = vorwaerts
         self.dir1.value = True
         self.pwm1.duty_cycle = int(speed / 100 * 65535)  # 16-bit: 0–65535
-""""
-def keineAhnungDigga():
-    pwm1 = pwmio.PWMOut(globals.PWM1, frequency=1000, duty_cycle=0)
-    pwm1.duty_cycle = 0
-
-"""
