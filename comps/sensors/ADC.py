@@ -113,3 +113,6 @@ class ADC:
 
         except KeyError:
             raise ValueError("Ungültiger ADC Channel?")
+        except Exception as e:
+            logging.error(f"LeseError: {e}")
+            raise
