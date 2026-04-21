@@ -104,6 +104,7 @@ class ADC:
             raise
 
     def get_lenkunng(self, channel) -> float:
+        #gibt den Lenkstand in Prozent wieder
         try:
             voltage = self.get_chan_voltage(channel)
             if voltage <= 0.10:
