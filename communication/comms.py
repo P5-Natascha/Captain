@@ -64,6 +64,7 @@ def handle_incoming_udp(sock):
 
 def tcpHandler(adc):
     currentVoltage = adc.get_12voltage(1)
+    logging.debug(f"Sending Voltage: {currentVoltage}")
     sendRealValues(currentVoltage,0)
 
 def udpHandler(motors):
