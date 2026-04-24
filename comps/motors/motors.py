@@ -1,6 +1,6 @@
 import digitalio
 import pwmio
-
+import logging
 import globals
 
 class Motors:
@@ -16,6 +16,7 @@ class Motors:
     def vorwaerts(self, speed: float) -> None:
         self.dir2.value = True
         self.pwm2.duty_cycle = int(speed / 100 * 65535)
+        logging.debug("Fahre vorwärts")
 
     def rueckwaerts(self, speed: float) -> None:
         self.dir2.value = False
