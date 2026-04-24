@@ -3,6 +3,7 @@ import socket
 import struct
 import random
 import threading
+import time
 
 from communication.inputHandler import inputHandler
 import globals
@@ -63,9 +64,12 @@ def handle_incoming_udp(sock):
     return None
 
 def tcpHandler(adc):
-    currentVoltage = adc.get_12voltage(1)
-    logging.debug(f"Sending Voltage: {currentVoltage}")
-    sendRealValues(currentVoltage,0)
+    t = threading.current_thread()
+    while getattr(t, "do_run", True):
+        currentVoltage = adc.get_12voltage(1)
+        logging.debug(f"Sending Voltage: {currentVoltage}")
+        sendRealValues(currentVoltage,0)
+        time.sleep(1)
 
 def udpHandler(motors):
         t = threading.current_thread()
@@ -85,6 +89,7 @@ def udpHandler(motors):
 
 def connHandler(adc, motors):
     t1 = threading.Thread(target=udpHandler)
+    t2 = threading.Thread(target=tcpHandler, args=(adc,))
     global active_tcp_connection, latest_tcp_msg
     tcp_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     tcp_sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -101,7 +106,6 @@ def connHandler(adc, motors):
                 active_tcp_connection.setblocking(False)
                 logging.info(f"Verbunden mit {addr}")
             except BlockingIOError:
-                import time
                 time.sleep(0.1)
                 continue
             while active_tcp_connection:
@@ -122,13 +126,14 @@ def connHandler(adc, motors):
                 except Exception as e:
                     logging.error(f"Fehler beim Empfangen: {e}")
                     break
-                tcpHandler(adc)
-                time.sleep(0.5)
+                if(not t2.is_alive()):
+                    t2.start()
 
             logging.info("Client getrennt, räume auf...")
             if active_tcp_connection:
                 active_tcp_connection.close()
             active_tcp_connection = None
+            t2.do_run = False
             motors.stop()
             motors.stoplenkung()
 
