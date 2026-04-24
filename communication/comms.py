@@ -67,6 +67,7 @@ def udpHandler():
         sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         sock.bind(('0.0.0.0', UDP_PORT))
         logging.debug(getattr(t, "do_run", True))
+        motors = Motors()
         while getattr(t, "do_run", True):
             try:
                 data, addr = sock.recvfrom(1024)
@@ -75,7 +76,7 @@ def udpHandler():
                     latest_udp_data_x = x
                     latest_udp_data_y = y
                     latest_udp_data_mode = mode
-                    inputHandler(latest_udp_data_x, latest_udp_data_y)
+                    inputHandler(latest_udp_data_x, latest_udp_data_y, motors)
             except: pass
 
 def connHandler(adc):
