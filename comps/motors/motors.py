@@ -34,3 +34,5 @@ class Motors:
     def rechts(self, speed: float):
         self.dir1.value = True
         self.pwm1.duty_cycle = int(speed / 100 * 65535)  # 16-bit: 0–65535
+    def stop(self):
+        self.pwm1.duty_cycle = 0

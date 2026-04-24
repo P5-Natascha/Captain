@@ -5,8 +5,8 @@ import random
 import threading
 
 from communication.inputHandler import inputHandler
-from comps.motors.motors import keineAhnungDigga, stop
 import globals
+from comps.motors import motors
 
 latest_tcp_msg = ""
 active_tcp_connection = None
@@ -122,7 +122,7 @@ def connHandler(adc):
             if active_tcp_connection:
                 active_tcp_connection.close()
             active_tcp_connection = None
-            stop()
+            motors.stop()
 
         except Exception as e:
             logging.error(f"Kritischer Fehler: {e}")
