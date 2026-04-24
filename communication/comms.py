@@ -76,7 +76,6 @@ def udpHandler():
                     latest_udp_data_y = y
                     latest_udp_data_mode = mode
                     inputHandler(latest_udp_data_x, latest_udp_data_y)
-                    logging.debug("Test")
             except: pass
 
 def connHandler(adc):
