@@ -123,6 +123,7 @@ def connHandler(adc, motors):
                     logging.error(f"Fehler beim Empfangen: {e}")
                     break
                 tcpHandler(adc)
+                time.sleep(0.1)
 
             logging.info("Client getrennt, räume auf...")
             if active_tcp_connection:
