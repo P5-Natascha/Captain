@@ -62,12 +62,11 @@ def handle_incoming_udp(sock):
         pass
     return None
 
-def udpHandler():
+def udpHandler(motors):
         t = threading.current_thread()
         sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         sock.bind(('0.0.0.0', UDP_PORT))
         logging.debug(getattr(t, "do_run", True))
-        motors = Motors()
         while getattr(t, "do_run", True):
             try:
                 data, addr = sock.recvfrom(1024)
@@ -79,7 +78,7 @@ def udpHandler():
                     inputHandler(latest_udp_data_x, latest_udp_data_y, motors)
             except: pass
 
-def connHandler(adc):
+def connHandler(adc, motors):
     t1 = threading.Thread(target=udpHandler)
     global active_tcp_connection, latest_tcp_msg
     tcp_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -123,6 +122,7 @@ def connHandler(adc):
             if active_tcp_connection:
                 active_tcp_connection.close()
             active_tcp_connection = None
+            motors.stop()
 
         except Exception as e:
             logging.error(f"Kritischer Fehler: {e}")
