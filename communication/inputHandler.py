@@ -30,12 +30,12 @@ def inputHandler(x,y, motors, adc):
         else:
             if globals.current_mode == 1:
                 if currentLenkung < 1.4:
-                    speed = LENKUNG * 0.6
+                    speed = LENKUNG * 0.55
                     motors.links(speed)
                 if currentLenkung > 1.5:
-                    speed = LENKUNG * 0.6
+                    speed = LENKUNG * 0.55
                     motors.rechts(speed)
-                if currentLenkung <= 1.44:
+                if currentLenkung <= 1.42:
                     if currentLenkung >= 1.40:
                         motors.stoplenkung()
             else:
