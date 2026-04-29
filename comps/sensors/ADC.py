@@ -107,11 +107,13 @@ class ADC:
         #gibt den Lenkstand in Prozent wieder
         try:
             voltage = self.get_chan_voltage(channel)
-            #if voltage <= 0.10:
-            #    return -100.0
-            #if voltage >= 4.0:
-            #    return 100.0
-            return voltage
+            if voltage <= 1.30:
+                return -100.0
+            if voltage >= 1.6:
+                return 100.0
+            if voltage <= 1.45:
+                if voltage >= 1.55:
+                    return 0.0
         except KeyError:
             raise ValueError("Ungültiger ADC Channel?")
         except Exception as e:
