@@ -103,7 +103,7 @@ class ADC:
             logging.error(f"LeseError: {e}")
             raise
 
-    def get_lenkunng(self, channel) -> float:
+    def get_lenkung(self, channel) -> float:
         #gibt den Lenkstand in Prozent wieder
         try:
             voltage = self.get_chan_voltage(channel)

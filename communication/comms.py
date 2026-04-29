@@ -66,12 +66,12 @@ def handle_incoming_udp(sock):
 def tcpHandler(adc):
     t = threading.current_thread()
     while getattr(t, "do_run", True):
-        currentVoltage = adc.get_12voltage(1)
+        currentVoltage = adc.get_lenkung(2)
         logging.debug(f"Sending Voltage: {currentVoltage}")
         sendRealValues(currentVoltage,0)
         time.sleep(1)
 
-def udpHandler(motors):
+def udpHandler(adc, motors):
         t = threading.current_thread()
         sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         sock.bind(('0.0.0.0', UDP_PORT))
@@ -84,7 +84,7 @@ def udpHandler(motors):
                     latest_udp_data_x = x
                     latest_udp_data_y = y
                     latest_udp_data_mode = mode
-                    inputHandler(latest_udp_data_x, latest_udp_data_y, motors)
+                    inputHandler(latest_udp_data_x, latest_udp_data_y, motors, adc)
             except: pass
 
 def connHandler(adc, motors):
