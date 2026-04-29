@@ -25,7 +25,7 @@ def main():
     motors = Motors()
     t1 = threading.Thread(target=comms.connHandler, args=(adc,motors,))
     t1.start()
-    t2 = threading.Thread(target=comms.udpHandler, args=(motors,))
+    t2 = threading.Thread(target=comms.udpHandler, args=(adc,motors,))
     t2.start()
 
     print(adc.get_ampere(0))

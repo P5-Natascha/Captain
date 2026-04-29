@@ -3,6 +3,7 @@ import socket
 import struct
 import random
 import threading
+import time
 
 from communication.inputHandler import inputHandler
 import globals
@@ -62,7 +63,15 @@ def handle_incoming_udp(sock):
         pass
     return None
 
-def udpHandler(motors):
+def tcpHandler(adc):
+    t = threading.current_thread()
+    while getattr(t, "do_run", True):
+        currentVoltage = adc.get_12voltage(1)
+        logging.debug(f"Sending Voltage: {currentVoltage}")
+        sendRealValues(currentVoltage,0)
+        time.sleep(1)
+
+def udpHandler(adc, motors):
         t = threading.current_thread()
         sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         sock.bind(('0.0.0.0', UDP_PORT))
@@ -75,11 +84,12 @@ def udpHandler(motors):
                     latest_udp_data_x = x
                     latest_udp_data_y = y
                     latest_udp_data_mode = mode
-                    inputHandler(latest_udp_data_x, latest_udp_data_y, motors)
+                    inputHandler(latest_udp_data_x, latest_udp_data_y, motors, adc)
             except: pass
 
 def connHandler(adc, motors):
     t1 = threading.Thread(target=udpHandler)
+    t2 = threading.Thread(target=tcpHandler, args=(adc,))
     global active_tcp_connection, latest_tcp_msg
     tcp_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     tcp_sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -96,7 +106,6 @@ def connHandler(adc, motors):
                 active_tcp_connection.setblocking(False)
                 logging.info(f"Verbunden mit {addr}")
             except BlockingIOError:
-                import time
                 time.sleep(0.1)
                 continue
             while active_tcp_connection:
@@ -116,12 +125,18 @@ def connHandler(adc, motors):
                     time.sleep(0.01)
                 except Exception as e:
                     logging.error(f"Fehler beim Empfangen: {e}")
-                    break
+
+                try:
+                    if(t2.is_alive() == False):
+                        t2.start()
+                except Exception as e:
+                    logging.error(f"Fehler beim Empfangen: {e}")
 
             logging.info("Client getrennt, räume auf...")
             if active_tcp_connection:
                 active_tcp_connection.close()
             active_tcp_connection = None
+            t2.do_run = False
             motors.stop()
             motors.stoplenkung()
 
